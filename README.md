@@ -36,3 +36,36 @@ At this point we will need to initialize Kubernetes on our master server.
 # Adding Calico project to act as our pod network 
 kubeadm init --apiserver-advertise-address=PrivateIPaddress --pod-network-cidr=192.168.0.0/16 --ignore-preflight-errors=NumCPU
 ```
+
+## Setting up "eksctl" command line utility via Windows environment 
+This utility is used for creating and managing Kubernetes clusters via AWS Elastic Kubernetes Service.
+Note: Make sure you have your AWS access keys configured on your machine. (Windows users: *"C:\Users\username\.aws\credentials"*)
+
+**1. First we will begin with installing "Chocolatey" Make sure to launch powershell as admin**
+```ps1
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+```
+
+**2. Install eksctl on your local machine.**
+```ps1
+choco install -y eksctl
+
+# If you need to simply upgrade the utility run:
+choco upgrade -y eksctl
+```
+**3. Confirm that the installation was sucessful**
+```ps1
+eksctl version
+```
+
+**4. Now we will run a simple execution of creating a cluster. The following snippet can be saved in a ps1 file.**
+
+```ps1
+eksctl create cluster `
+--name test-cluster `
+--version 1.17 `
+--region us-east-1 `
+--nodegroup-name linux-nodes `
+--node-type t2.micro `
+--nodes 2 
+```
